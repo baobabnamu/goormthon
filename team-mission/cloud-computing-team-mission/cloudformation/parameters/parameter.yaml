@@ -4,6 +4,14 @@
     "ParameterValue": "vpc-0a9cc247dbc0fcda2"
   },
   {
+    "ParameterKey": "AvailabilityZone1",
+    "ParameterValue": "ap-northeast-2a"
+  },
+  {
+    "ParameterKey": "AvailabilityZone2",
+    "ParameterValue": "ap-northeast-2b"
+  },
+  {
     "ParameterKey": "PublicSubnet1Cidr",
     "ParameterValue": "10.0.1.0/24"
   },
@@ -18,13 +26,5 @@
   {
     "ParameterKey": "PrivateSubnet2Cidr",
     "ParameterValue": "10.0.4.0/24"
-  },
-  {
-    "ParameterKey": "AvailabilityZone1",
-    "ParameterValue": "ap-northeast-2a"
-  },
-  {
-    "ParameterKey": "AvailabilityZone2",
-    "ParameterValue": "ap-northeast-2b"
   }
 ]
