@@ -1,0 +1,15 @@
+{
+  "name": "express-mysql-redis",
+  "version": "1.0.0",
+  "description": "Express app with MySQL and Redis integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3",
+    "redis": "^4.0.0",
+    "dotenv": "^10.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  web:
+    image: nginx:latest
+    platform: linux/arm64
+    ports:
+      - "8080:80"
+    volumes:
+      - mydata:/usr/share/nginx/html
+
+volumes:
+  mydata:

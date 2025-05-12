@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  web:
+    image: nginx:latest
+    networks:
+      - myoverlay
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    networks:
+      - myoverlay
+
+networks:
+  myoverlay:
+    external: true

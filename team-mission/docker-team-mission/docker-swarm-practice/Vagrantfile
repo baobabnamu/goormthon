@@ -1,0 +1,95 @@
+# 워커 노드 개수 설정
+NodeCnt = 2
+
+# /etc/hosts에 워커 노드의 IP/호스트명 입력 명령어를 문자열로 생성
+hosts_entries = (1..NodeCnt).map do |i|
+  "echo '192.168.56.#{40 + i} swarm-worker-node#{i}' >> /etc/hosts"
+end.join("\n")
+
+# Vagrant 기본 구성
+Vagrant.configure("2") do |config|
+
+  # 박스 이미지 설정
+  config.vm.box = "bento/ubuntu-22.04"
+
+  # 기본 디렉토리 공유 비활성화
+  config.vm.synced_folder "./", "/vagrant", disabled: true
+
+  # 모든 노드 공통 스크립트 적용
+  config.vm.provision :shell, privileged: true, inline: $install_common_tools
+
+  # 마스터 노드 설정
+  config.vm.define "swarm-manager-node" do |master|
+    master.vm.hostname = "swarm-manager-node"
+    master.vm.network "private_network", ip: "192.168.56.40"
+    master.vm.provider :vmware_fusion do |vf|
+      vf.memory = 4096
+      vf.cpus = 4
+    end
+    master.vm.provision :shell, privileged: true, inline: $provision_swarm_manager
+  end
+
+  # 워커 노드 초기 설정
+  (1..NodeCnt).each do |i|
+    config.vm.define "swarm-worker-node#{i}" do |node|
+      node.vm.hostname = "swarm-worker-node#{i}"
+      node.vm.network "private_network", ip: "192.168.56.#{i + 40}"
+      node.vm.provider :vmware_fusion do |vf|
+        vf.memory = 2048
+        vf.cpus = 2
+      end
+      node.vm.provision :shell, privileged: true, inline: $provision_swarm_worker
+    end
+  end
+end
+
+$install_common_tools = <<-SHELL
+
+echo '********** 1) 타임존 셋팅 **********'
+timedatectl set-timezone Asia/Seoul
+
+echo '********** 2) Hosts 수정 **********'
+echo "192.168.56.40 swarm-manager-node" >> /etc/hosts
+#{hosts_entries}
+
+echo '********** 3) 방화벽 해제 및 Swap 비활성화 및 필수 커널 모듈 로드 및 sysctl 설정 **********'
+systemctl stop ufw && systemctl disable ufw
+swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
+modprobe overlay && modprobe br_netfilter
+cat << EOF >> /etc/sysctl.d/swarm.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+sysctl --system
+
+echo '********** 4) Docker (컨테이너 런타임) 다운로드 **********'
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu jammy stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+sudo usermod -aG docker vagrant
+sudo systemctl enable docker
+
+SHELL
+
+$provision_swarm_manager = <<-SHELL
+
+echo '********** 1) docker swarm manager node 셋팅 **********'
+docker swarm init --advertise-addr 192.168.56.40
+docker swarm join-token manager | grep join > /home/vagrant/join.sh 
+
+SHELL
+
+$provision_swarm_worker = <<-SHELL
+
+echo '********** 1) docker swarm worker node 셋팅 **********'
+apt-get install -y sshpass
+sshpass -p "vagrant" scp -o StrictHostKeyChecking=no vagrant@192.168.56.40:/home/vagrant/join.sh /tmp/join.sh
+chmod +x /tmp/join.sh
+sudo bash /tmp/join.sh
+sudo rm /tmp/join.sh
+
+SHELL

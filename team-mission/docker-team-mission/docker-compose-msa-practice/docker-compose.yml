@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  service1:
+    build:
+      context: ./service1
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    ports:
+      - "5001:5000"
+    networks:
+      - micro-net
+
+  service2:
+    build:
+      context: ./service2
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    ports:
+      - "5002:5000"
+    networks:
+      - micro-net
+
+networks:
+  micro-net:
