@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create an EC2 KeyPair and store the private key in S3"
+
+Resources:
+  MyKeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: goormEC2WebServerKeyPair
+      KeyType: rsa
+      KeyFormat: pem
+
+Outputs:
+  KeyPairName:
+    Description: "The name of the EC2 KeyPair created"
+    Value: !Ref MyKeyPair
