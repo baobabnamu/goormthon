@@ -14,3 +14,9 @@ aws cloudformation create-stack \
 # stack 삭제
 aws cloudformation delete-stack \
     --stack-name cfn-goorm
+
+# stack 업데이트
+aws cloudformation update-stack \
+    --stack-name cfn-goorm \
+    --template-body $filePath/ec2-instance.yaml \
+    --region ap-northeast-2
