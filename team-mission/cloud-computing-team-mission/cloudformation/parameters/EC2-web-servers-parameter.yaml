@@ -1,0 +1,13 @@
+---
+- ParameterKey: InstanceType
+  ParameterValue: t2.micro
+- ParameterKey: PrivateSubnet1Id
+  ParameterValue: subnet-02417533a3a113c28
+- ParameterKey: PrivateSubnet2Id
+  ParameterValue: subnet-00cb400073f50f7e1
+- ParameterKey: KeyName
+  ParameterValue: goormEC2WebServerKeyPair
+- ParameterKey: ExistingSecurityGroupId
+  ParameterValue: sg-0e714341ed2c161fe
+- ParameterKey: EC2InstanceAMI
+  ParameterValue: ami-061fdbe1769e05459
