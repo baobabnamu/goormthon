@@ -1,14 +1,21 @@
 filePath="file:///Users/jaehwan/Desktop/goormthon/team-mission/cloud-computing-team-mission/cloudformation"
 
 # 템플릿 유효성 검사
-aws cloudformation validate-template --template-body $filePath/compute/EC2.yaml
 aws cloudformation validate-template --template-body $filePath/networking/VPC.yaml
+aws cloudformation validate-template --template-body $filePath/networking/VPC-subnets.yaml
+aws cloudformation validate-template --template-body $filePath/compute/EC2.yaml
 
 # 템플릿을 활용해 stack 생성
 aws cloudformation create-stack \
     --stack-name cfn-goorm-vpc \
     --template-body $filePath/networking/VPC.yaml \
     --region ap-northeast-2
+
+aws cloudformation create-stack \
+  --stack-name cfn-goorm-vpc-subnets \
+  --template-body $filePath/networking/vpc-subnets.yaml \
+  --parameters $filePath/parameters/parameter.yaml \
+  --capabilities CAPABILITY_IAM
 
 aws cloudformation create-stack \
     --stack-name cfn-goorm \
