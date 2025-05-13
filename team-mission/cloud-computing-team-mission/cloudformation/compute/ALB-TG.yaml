@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create an Application Load Balancer (ALB) and associate with existing Target Group"
+
+Parameters:
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/VpcId
+    Description: "The ID of the existing VPC"
+
+  PublicSubnet1Id:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/PublicSubnet1Id
+    Description: "The ID of the first Public Subnet for ALB"
+
+  PublicSubnet2Id:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/PublicSubnet2Id
+    Description: "The ID of the second Public Subnet for ALB"
+
+  TargetGroupArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/TargetGroupArn
+    Description: "The ARN of the existing Target Group"
+  
+  ExistingSecurityGroupId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/ExistingSecurityGroupId
+    Description: "The ID of the existing Security Group"
+
+Resources:
+  # ALB 생성
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: goorm-alb
+      Scheme: internet-facing
+      Type: application
+      IpAddressType: ipv4
+      SecurityGroups: 
+        - !Ref ExistingSecurityGroupId
+      Subnets:
+        - !Ref PublicSubnet1Id
+        - !Ref PublicSubnet2Id
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-ALB"
+
+  # ALB Listener (HTTP)
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+      Protocol: HTTP
+      Port: 80
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupArn
+
+Outputs:
+  LoadBalancerDNS:
+    Description: "DNS name of the Application Load Balancer"
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
+
+  TargetGroupArnOutput:
+    Description: "The ARN of the associated Target Group"
+    Value: !Ref TargetGroupArn

@@ -1,9 +1,9 @@
 #!/bin/bash
 # 시스템 패키지 업데이트
-dnf update -y
+yum update -y
 
 # 웹 서버 (NGINX) 설치
-dnf install -y nginx
+amazon-linux-extras install -y nginx1
 
 # 사용자 정의 웹 페이지 생성 (호스트명 표시)
 HOSTNAME=$(hostname)

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Create two EC2 instances using an existing Security Group"
+Description: "Create two EC2 instances using an existing Security Group with optimized structure"
 
 Parameters:
   VpcId:
@@ -41,10 +41,10 @@ Resources:
   # EC2 Instance 1
   EC2Instance1:
     Type: AWS::EC2::Instance
-    Properties:
+    Properties: 
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyPairName
-      ImageId: !Ref EC2InstanceAMI  # Amazon Linux 2 (us-east-1)
+      ImageId: !Ref EC2InstanceAMI
       NetworkInterfaces:
         - AssociatePublicIpAddress: false
           DeviceIndex: 0
@@ -58,10 +58,10 @@ Resources:
   # EC2 Instance 2
   EC2Instance2:
     Type: AWS::EC2::Instance
-    Properties:
+    Properties: 
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyPairName
-      ImageId: !Ref EC2InstanceAMI  # Amazon Linux 2 (us-east-1)
+      ImageId: !Ref EC2InstanceAMI
       NetworkInterfaces:
         - AssociatePublicIpAddress: false
           DeviceIndex: 0

@@ -21,7 +21,7 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: existing-ec2-target-group
+      Name: goorm-tg-private-ec2
       Protocol: HTTP
       Port: 80
       VpcId: !Ref VpcId
