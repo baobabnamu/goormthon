@@ -6,6 +6,7 @@ aws cloudformation validate-template --template-body file://$filePath/networking
 aws cloudformation validate-template --template-body file://$filePath/networking/sg-web.yaml
 aws cloudformation validate-template --template-body file://$filePath/security/keypair.yaml
 aws cloudformation validate-template --template-body file://$filePath/compute/EC2-web-servers.yaml
+aws cloudformation validate-template --template-body file://$filePath/compute/TG-EC2-web-servers.yaml
 aws cloudformation validate-template --template-body file://$filePath/compute/EC2.yaml
 
 # 템플릿을 활용해 stack 생성
@@ -35,6 +36,11 @@ aws cloudformation create-stack \
   --capabilities CAPABILITY_IAM
 
 aws cloudformation create-stack \
+  --stack-name cfn-goorm-tg-web-servers \
+  --template-body file://$filePath/compute/TG-EC2-web-servers.yaml \
+  --capabilities CAPABILITY_IAM
+
+aws cloudformation create-stack \
     --stack-name cfn-goorm \
     --template-body file://$filePath/compute/EC2.yaml \
     --region ap-northeast-2
@@ -44,6 +50,7 @@ aws cloudformation create-stack \
 aws cloudformation delete-stack --stack-name cfn-goorm
 aws cloudformation delete-stack --stack-name cfn-goorm-keypair
 aws cloudformation delete-stack --stack-name cfn-goorm-web-servers
+aws cloudformation delete-stack --stack-name cfn-goorm-tg-web-servers
 
 # stack 업데이트
 aws cloudformation update-stack \
@@ -65,3 +72,5 @@ aws ssm put-parameter --name "/cloudformation/compute/InstanceType" --value "t3.
 aws ssm put-parameter --name "/cloudformation/compute/EC2InstanceAMI" --value "ami-061fdbe1769e05459" --type String --overwrite
 aws ssm put-parameter --name "/cloudformation/compute/ExistingSecurityGroupId" --value "sg-0e714341ed2c161fe" --type String --overwrite
 aws ssm put-parameter --name "/cloudformation/security/KeyPairName" --value "goormEC2WebServerKeyPair" --type String --overwrite
+aws ssm put-parameter --name "/cloudformation/compute/ExistingEC2Instance1Id" --value "i-0d021a97a3152a31c" --type String --overwrite
+aws ssm put-parameter --name "/cloudformation/compute/ExistingEC2Instance2Id" --value "i-07e243e0403a8f957" --type String --overwrite

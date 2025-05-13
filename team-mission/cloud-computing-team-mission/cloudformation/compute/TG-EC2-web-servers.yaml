@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create a Target Group using existing EC2 instances"
+
+Parameters:
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/VpcId
+    Description: "The ID of the existing VPC"
+
+  ExistingEC2Instance1Id:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/ExistingEC2Instance1Id
+    Description: "The ID of the existing EC2 Instance 1"
+
+  ExistingEC2Instance2Id:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/ExistingEC2Instance2Id
+    Description: "The ID of the existing EC2 Instance 2"
+
+Resources:
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: existing-ec2-target-group
+      Protocol: HTTP
+      Port: 80
+      VpcId: !Ref VpcId
+      TargetType: instance
+      HealthCheckEnabled: true
+      HealthCheckPath: /
+      HealthCheckPort: 80
+      Matcher:
+        HttpCode: "200-299"
+      Targets:
+        - Id: !Ref ExistingEC2Instance1Id
+          Port: 80
+        - Id: !Ref ExistingEC2Instance2Id
+          Port: 80
+
+Outputs:
+  TargetGroupArn:
+    Description: "The ARN of the Target Group"
+    Value: !Ref TargetGroup
