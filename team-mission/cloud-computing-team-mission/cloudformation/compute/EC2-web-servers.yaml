@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create two EC2 instances using an existing Security Group"
+
+Parameters:
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/VpcId
+    Description: "The ID of the existing VPC"
+  
+  PrivateSubnet1Id:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/PrivateSubnet1Id
+    Description: "The ID of the first Subnet where the EC2 will be launched"
+
+  PrivateSubnet2Id:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/networking/PrivateSubnet2Id
+    Description: "The ID of the second Subnet where the EC2 will be launched"
+
+  InstanceType:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/InstanceType
+    Description: "EC2 Instance Type Only Using Free-Tier Instance Type"
+
+  KeyPairName:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/security/KeyPairName
+    Description: "The name of an existing EC2 KeyPair for SSH access"
+
+  ExistingSecurityGroupId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/ExistingSecurityGroupId
+    Description: "The ID of the existing Security Group"
+
+  EC2InstanceAMI:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloudformation/compute/EC2InstanceAMI
+    Description: "The ID of Amazon Linux 2 AMI from ap-northeast-2"
+
+Resources:
+  # EC2 Instance 1
+  EC2Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      ImageId: !Ref EC2InstanceAMI  # Amazon Linux 2 (us-east-1)
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: false
+          DeviceIndex: 0
+          SubnetId: !Ref PrivateSubnet1Id
+          GroupSet:
+            - !Ref ExistingSecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-EC2-1"
+
+  # EC2 Instance 2
+  EC2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      ImageId: !Ref EC2InstanceAMI  # Amazon Linux 2 (us-east-1)
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: false
+          DeviceIndex: 0
+          SubnetId: !Ref PrivateSubnet2Id
+          GroupSet:
+            - !Ref ExistingSecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-EC2-2"
+
+Outputs:
+  Instance1Id:
+    Description: "ID of the first EC2 instance"
+    Value: !Ref EC2Instance1
+
+  Instance2Id:
+    Description: "ID of the second EC2 instance"
+    Value: !Ref EC2Instance2
