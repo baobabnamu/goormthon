@@ -27,11 +27,15 @@
     - Goormthon 수료 과정에서 필요한 강의들에 대한 실습 내용을 저장합니다.  
     - Stores practice code for lectures required for Goormthon completion.
 
-  - Private Mission
+  - Personal Mission
     - Goormthon 내 개인 미션 내용을 저장합니다.  
     - Stores code related to personal missions within Goormthon.
 
-  - Private Utility
+  - Personal Algorithm Mission
+    - Goormthon 내 개인 알고리즘 미션 내용을 저장합니다.  
+    - Stores code related to personal missions within Goormthon.
+
+  - Personal Utility
     - Goormthon 수료 과정에서 필요에 의해 커스터마이징, 개발한 내용을 저장합니다.
     - Stores customized tools and code developed for personal use during Goormthon.
 
