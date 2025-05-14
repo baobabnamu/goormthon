@@ -1,0 +1,15 @@
+{
+  "Id": "Policy1747212946379",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1747212945535",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::goorm-s3-240514/test.html",
+      "Principal": "*"
+    }
+  ]
+}
