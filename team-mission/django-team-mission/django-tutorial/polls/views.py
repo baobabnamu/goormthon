@@ -5,7 +5,19 @@ from django.urls import reverse
 from django.views import generic
 
 from .models import Choice, Question
+from rest_framework import viewsets
+from .serializers import QuestionSerializer, ChoiceSerializer
 
+# DRF 프로젝트에서 사용되는 뷰
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+class ChoiceViewSet(viewsets.ModelViewSet):
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
+
+# Django Tutorial 프로젝트에서 사용되는 뷰
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
