@@ -35,28 +35,40 @@ resource "aws_route_table" "public_rt" {
   }
 }
 
+resource "aws_route_table_association" "public_rt_association" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
 resource "aws_security_group" "goorm_sg" {
   name        = "Goorm-SG"
   description = "Allow SSH and HTTP"
   vpc_id      = aws_vpc.goorm_vpc.id
 
-  ingress {
+  ingress { # SSH
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
+  ingress { # HTTP
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
+  ingress { # HTTPS
     from_port   = 443
     to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # Jenkins
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
