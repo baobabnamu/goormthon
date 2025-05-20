@@ -271,6 +271,11 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Terraform lock file
+.terraform.lock.hcl
+
+# Terraform plan file
+tfplan
 ### Vagrant ###
 # General
 .vagrant/
