@@ -59,9 +59,9 @@ resource "aws_security_group" "goorm_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress { # HTTPS
-    from_port   = 443
-    to_port     = 443
+  ingress { # Django Apps
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
