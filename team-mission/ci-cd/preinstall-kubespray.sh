@@ -54,3 +54,10 @@ ssh -o StrictHostKeyChecking=no \
 # terraform 폴더에서 사용한 키와 동일한 키가 존재해야 하고, 0400 권한이여야 함.
 ls -l ~/.ssh/
 chmod 400 ~/.ssh/your-key.pem
+
+# 테스트용 kubectl 명령어
+ssh -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    -i ~/.ssh/your-key.pem \
+    -o ProxyCommand="ssh -i ~/.ssh/your-key.pem -W %h:%p ubuntu@your-bastion-ip" \
+    ubuntu@your-k8s-node-ip 'sudo kubectl get nodes'
