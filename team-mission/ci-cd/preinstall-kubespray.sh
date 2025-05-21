@@ -61,3 +61,6 @@ ssh -o StrictHostKeyChecking=no \
     -i ~/.ssh/your-key.pem \
     -o ProxyCommand="ssh -i ~/.ssh/your-key.pem -W %h:%p ubuntu@your-bastion-ip" \
     ubuntu@your-k8s-node-ip 'sudo kubectl get nodes'
+
+# 실습 종료 후 terraform destroy 실행
+terraform destroy -var-file=credentials.tfvars
