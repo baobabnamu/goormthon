@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rbac-test-pod
+  namespace: default
+spec:
+  serviceAccountName: reader-sa
+  containers:
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command: ['sh', '-c', 'kubectl get pods && kubectl get deployments']
