@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-db  # 일반적인 이름으로 변경
+  name: mysql-django  # 일반적인 이름으로 변경
   labels:
     app: mysql
 spec:
