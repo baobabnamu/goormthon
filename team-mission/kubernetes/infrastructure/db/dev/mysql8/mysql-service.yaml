@@ -1,0 +1,34 @@
+---
+# Headless Service for StatefulSet
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  clusterIP: None  # Headless Service
+  ports:
+  - port: 3306
+    targetPort: mysql
+    protocol: TCP
+    name: mysql
+  selector:
+    app: mysql
+---
+# Regular Service for Django (all CRUD operations)
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-db  # 일반적인 이름으로 변경
+  labels:
+    app: mysql
+spec:
+  ports:
+  - port: 3306
+    targetPort: mysql
+    protocol: TCP
+    name: mysql
+  selector:
+    app: mysql
+  type: ClusterIP 
