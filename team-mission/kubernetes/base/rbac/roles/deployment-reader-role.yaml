@@ -1,0 +1,9 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: deployment-reader
+  namespace: default
+rules:
+- apiGroups: ["apps"]           # "" means the core API group (Pods, Services, etc.)
+  resources: ["deployments"]       # Targeting Pod resources
+  verbs: ["get", "watch", "list"]  # Allowing read-only actions

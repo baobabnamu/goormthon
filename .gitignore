@@ -1,3 +1,7 @@
+# kubernetes
+*-configmap.yaml
+*-secret.yaml
+
 # MySQL Database Store Directory
 mysql
 
